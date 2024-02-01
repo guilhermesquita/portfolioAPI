@@ -84,6 +84,109 @@ public getPayload = (token: string): TokenPayload | null => {
 #### 📂Errors
 > Cria as classes necessárias para disparar erros nas requisições.
 
+## Execução de migrations
+- Criar o arquivo knexfile.js
+```ts
+module.exports = {
+    client: 'postgresql',
+    connection: {
+      host: process.env.DB_HOST || 'localhost',
+      port: process.env.DB_PORT || 5432,
+      user: process.env.DB_USER || 'username',
+      password: process.env.DB_PASSWORD || 'password',
+      database: process.env.DB_DATABASE || 'databasename',
+    },
+    migrations: {
+      tableName: 'knex_migrations',
+      directory: './src/database/migrations',
+    },
+  };
+```
+- Adicione os seguintes scripts ao seu arquivo package.json:
+```json
+"scripts": {
+  "migrate": "knex migrate:latest",
+  "rollback": "knex migrate:rollback",
+  "seed": "knex seed:run" //se possuir seeds
+}
+```
+
+- Crie uma nova migration usando o seguinte comando: 
+```bash
+npx knex migrate:make nome_da_migration
+```
+
+- Será criado um arquivo que terá um nome como 20220131235959_nome_da_migration.js. Defina as operações neste arquivo:
+```ts
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+exports.up = function (knex) {
+    return knex.schema.createTable('nomedatabela', (table) => {
+      table.string('id').primary().notNullable().unique();
+      table.string('name').notNullable();
+    });
+  };
+
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+exports.down = function(knex) {
+  
+};
+```
+
+- Execute as migrations usando o seguinte comando: 
+```bash
+npx knex migrate:latest
+```
+
+- Se precisar reverter as últimas migrations, use o seguinte comando:
+```bash
+npx knex migrate:rollback
+```
+
+- Se você tiver arquivos de seed, que são usados para inserir dados iniciais no banco de dados, você pode executá-los usando o seguinte comando:
+```bash
+npx knex seed:run
+```
+---
+
+## Criação de seeds
+- Use o seguinte comando para criar um arquivo de seed:
+```bash
+npx knex seed:make nome_da_seed
+```
+- O arquivo terá um nome semelhante a 20220131235959_nome_da_seed.js. utilize o objeto 'knex' para inserir dados no banco de dados. Aqui está um exemplo:
+```js
+// src/database/seeds/20220131235959_nome_da_seed.js
+exports.seed = function (knex) {
+  // Deletes ALL existing entries
+  return knex('tabela_exemplo').del()
+    .then(function () {
+      // Inserts seed entries
+      return knex('tabela_exemplo').insert([
+        { id: 1, coluna1: 'valor1' },
+        { id: 2, coluna1: 'valor2' },
+        // Adicione mais dados conforme necessário
+      ]);
+    });
+};
+```
+- execute: 
+```bash
+npx knex seed:run
+```
+
+- adicione isso no knexfile.js:
+```js
+seeds: {
+    directory: './src/database/seeds', // Diretório onde os arquivos de seeds estão localizados
+  },
+```
+
 ## Endpoints Básicos
 ### endpoints
 
