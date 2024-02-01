@@ -84,11 +84,6 @@ public getPayload = (token: string): TokenPayload | null => {
 #### 📂Errors
 > Cria as classes necessárias para disparar erros nas requisições.
 
-#### 📂mocks
-> Armazena os dados e mocks utilizados nos testes unitários.
-#### 📂tests
-> Armazena as switch de testes de integração.
-
 ## Endpoints Básicos
 ### endpoints
 

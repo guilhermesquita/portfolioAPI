@@ -1,4 +1,4 @@
-export * from './user-entity'
+export * from './project-entity'
 export * from './post-entity' 
 export * from './comment-entity'
 export * from './like-dislike-post-entity'
