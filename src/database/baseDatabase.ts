@@ -5,10 +5,14 @@ dotenv.config()
 
 export abstract class BaseDatabase {
     protected static connection = knex({
-        client: "sqlite3",
+        client: "postgresql",
         connection: {
-            filename: process.env.DB_FILE_PATH as string,
-        },
+            host: 'db' || 'localhost',
+            port: process.env.DB_PORT as unknown as number || 5432,
+            user: process.env.DB_USER || 'postgres',
+            password: process.env.DB_PASSWORD || 'postgre' || undefined,
+            database: process.env.DATABASE
+          },
         useNullAsDefault: true,
         pool: { 
             min: 0,
